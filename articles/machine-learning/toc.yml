@@ -579,7 +579,10 @@
       href: how-to-manage-resources-vscode.md
     - name: VS Code interactive debugging
       displayName: vscode,remote,debug,pipelines,deployments,ssh
-      href: how-to-debug-visual-studio-code.md      
+      href: how-to-debug-visual-studio-code.md
+    - name: Remote debugging with Azure Debug Relay
+      displayName: vscode,remote,debug,relay,pipelines,deployments
+      href: azure-debug-relay.md            
     - name: Export and delete data
       displayName: GDPR
       href: how-to-export-delete-data.md
