@@ -105,6 +105,9 @@ aml_workspace.get_default_keyvault().set_secret(
 
 ### Add debugging code to your steps and pipelines
 
+> [!NOTE]
+> You can find end-to-end example of a debug-ready Azure ML pipeline [here in Azure Debug Relay repository](https://github.com/vladkol/azure-debug-relay/tree/main/samples/azure_ml_advanced).
+
 #### Add the following packages to the environment conda dependencies of every step
 
 * debugpy
@@ -169,7 +172,78 @@ if args.is_debug.lower() == 'true':
 
 Your code is ready for debugging. Now prepare Visual Studio Code.
 
-> **TODO**
+Every step you want to debug requires a separate [launch configuration](https://code.visualstudio.com/docs/python/debugging) in Visual Studio Code. You add them to `.vscode/launch.json` file.
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Listen 5678",
+            "type": "python",
+            "request": "attach",
+            "listen": {
+                "host": "127.0.0.1",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": "."
+                }
+            ]
+        },
+        {
+            "name": "Python: Listen 5679",
+            "type": "python",
+            "request": "attach",
+            "listen": {
+                "host": "127.0.0.1",
+                "port": 5679
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": "."
+                }
+            ]
+        }
+    ]
+}
+```
+
+> [!IMPORTANT]
+> Each step's launch configuration must use an individual debugging port (`5678` and `5679` above).
+
+Notice how the debugger maps paths on the local and the remote machines.
+If your code has a different structure remotely, you may need to provide more sophisticated path mappings. Here is that piece in `.vscode/launch.json`:
+
+```json
+"pathMappings": [
+{
+    "localRoot": "${workspaceFolder}",
+    "remoteRoot": "."
+}]
+```
+
+It tells VS Code that the workspace directory locally is mapped to the "current" directory remotely.
+
+If you want to debug a run with multiple steps, all individual step configurations should be grouped in a [compound configuration](https://code.visualstudio.com/docs/editor/debugging#_compound-launch-configurations):
+
+```json
+"compounds": [
+{
+    "name": "Python: 3 step pipeline",
+    "configurations": [
+    "Python: Listen 5678", 
+    "Python: Listen 5679",
+    "Python: Listen 5680"
+    ]
+}
+]
+```
+
+[Here](https://github.com/vladkol/azure-debug-relay/blob/main/.vscode/launch.json) you may look at a combined example.
 
 ## Debug your code
 
@@ -250,7 +324,13 @@ if args.is_debug.lower() == 'true' and hvd.rank() == 0:
         debugpy.breakpoint()
 ```
 
-If you need to handle these situations differently, you may need add your own code for picking individual debugging ports for every instance of your training steps.
+> [!TIP]
+If you need to handle these situations differently, you may need add your own code for picking individual debugging ports for every instance of your training steps. Instead of passing port number as a parameter, steps can choose ports and "reserve" them by [adding an Azure ML Run property](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-manage-runs?tabs=python#tag-and-find-runs) - if a property with a certain name was already added, the port has been utilized and therefore cannot be used.
+
+> [!IMPORTANT]
+> You still need to limit number of used ports because it defines how many debugging listeners start in Visual Studio Code.
+Every port requires a configuration in `.vscode/launch.json`.
+And there must be a compound configuration that includes all of them.
 
 ## Next steps
 
