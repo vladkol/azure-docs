@@ -289,7 +289,7 @@ Once the pipeline reaches steps you want to debug, `debugpy.breakpoint()` call i
 
 While debugging, you can leverage all features benefits of interactive debugging in Visual Studio Code, its Python extension, and debugpy.
 
-## Debugging pipelines with ParalllelRunStep and MPIConfiguration
+## Debugging pipelines with ParallelRunStep and MPIConfiguration
 
 > [!IMPORTANT]
 > When running distributed pipelines with [ParallelRunStep](https://docs.microsoft.com/en-us/python/api/azureml-pipeline-steps/azureml.pipeline.steps.parallel_run_step.parallelrunstep?preserve-view=true&view=azure-ml-py) or [MPIConfiguration](https://docs.microsoft.com/en-us/python/api/azureml-core/azureml.core.runconfig.mpiconfiguration?view=azure-ml-py),
