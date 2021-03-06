@@ -55,7 +55,7 @@ manually in Azure Portal, via Azure CLI, Azure SDK, ARM templates, etc.
 ### In Azure Portal
 
 1. [Create Azure Relay resource](https://ms.portal.azure.com/#create/Microsoft.Relay). Better make one in a region closest to your location.
-1. Once created, switch to the resource, and add a hybrid connection (`+ Hybrid Connection` button), give it a memorable name (e.g. `test` 🙂) - this is your **Hybrid Connection Name**.
+1. Once created, switch to the resource, and add a hybrid connection (`+ Hybrid Connection` button), give it a memorable name (e.g. `test`) - this is your **Hybrid Connection Name**.
 1. Switch to `Shared access policies` under `Settings` in the vertical panel.
 1. Add a new policy with `Send` and `Listen` permissions.
 1. Once created, copy its `Primary Connection String`, this is your **Connection String**.
