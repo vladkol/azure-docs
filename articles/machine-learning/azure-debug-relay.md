@@ -325,11 +325,14 @@ if args.is_debug.lower() == 'true' and hvd.rank() == 0:
 ```
 
 > [!TIP]
-If you need to handle these situations differently, you may need add your own code for picking individual debugging ports for every instance of your training steps. Instead of passing port number as a parameter, steps can choose ports and "reserve" them by [adding an Azure ML Run property](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-manage-runs?tabs=python#tag-and-find-runs) - if a property with a certain name was already added, the port has been utilized and therefore cannot be used.
+If you need to handle these situations differently, and full support steps distributed across multiple nodes and processes per node,
+you may need to add your own code for picking individual debugging ports for every instance of your training steps. Instead of passing port number as a parameter, steps can choose ports and "reserve" them by [adding an Azure ML Run property](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-manage-runs?tabs=python#tag-and-find-runs) - if a property with a certain name was already added, the port has been utilized and therefore cannot be used.
+Multiple processes per node require first starting process to initialize a `DebugRelay` object with a list of ports to connect to.
+You may need to employ a shared data structure and a locking mechanism to make sure processes know when DebugRelay
+has been already initialized (checking for azrelay process also works).
 
 > [!IMPORTANT]
-> You still need to limit number of used ports because it defines how many debugging listeners start in Visual Studio Code.
-Every port requires a configuration in `.vscode/launch.json`.
+> You still need to come up with a definitive number of ports because it configures how many debugging listeners start in Visual Studio Code. Every remote process you debug require its own port. Every port requires a configuration in `.vscode/launch.json`.
 And there must be a compound configuration that includes all of them.
 
 ## Next steps
