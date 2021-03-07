@@ -582,7 +582,7 @@
     - name: VS Code interactive debugging
       displayName: vscode,remote,debug,pipelines,deployments,ssh
       href: how-to-debug-visual-studio-code.md
-    - name: Remote debugging with Azure Debug Relay
+    - name: Distributed remote debugging with Azure Debug Relay
       displayName: vscode,remote,debug,relay,pipelines,deployments
       href: azure-debug-relay.md            
     - name: Export and delete data
