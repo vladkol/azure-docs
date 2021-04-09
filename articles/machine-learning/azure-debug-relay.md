@@ -291,8 +291,10 @@ While debugging, you can leverage all features benefits of interactive debugging
 
 ## Debugging pipelines with ParallelRunStep and MPIConfiguration
 
+[This code from Azure Debugging Relay repository](https://github.com/vladkol/azure-debug-relay/tree/main/samples/azure_ml_advanced) provides an end-to-end example of debugging a pipeline with ParallelRunStep and MPIConfiguration.
+
 > [!IMPORTANT]
-> When running distributed pipelines with [ParallelRunStep](https://docs.microsoft.com/en-us/python/api/azureml-pipeline-steps/azureml.pipeline.steps.parallel_run_step.parallelrunstep?preserve-view=true&view=azure-ml-py) or [MPIConfiguration](https://docs.microsoft.com/en-us/python/api/azureml-core/azureml.core.runconfig.mpiconfiguration?view=azure-ml-py),
+> If using code from this sample, when you run distributed pipelines with [ParallelRunStep](https://docs.microsoft.com/en-us/python/api/azureml-pipeline-steps/azureml.pipeline.steps.parallel_run_step.parallelrunstep?preserve-view=true&view=azure-ml-py) or [MPIConfiguration](https://docs.microsoft.com/en-us/python/api/azureml-core/azureml.core.runconfig.mpiconfiguration?view=azure-ml-py),
 you need to make sure that debugging only happens on a single node, and not all nodes that steps is running on.
 You also need to set `process_count_per_node` parameter in `ParallelRunConfig` or `MpiConfiguration` to `1` (one).
 Otherwise there will be network port conflicts.
@@ -307,7 +309,7 @@ if args.is_debug.lower() == 'true' and bool(os.environ.get('AZ_BATCH_IS_CURRENT_
     start_remote_debugging_from_args()
 ```
 
-With MPIConfiguration, it depends on the distributed training framework. Ultimately, you need identify an instance with ** ran equal to zero*.
+With MPIConfiguration, it depends on the distributed training framework. Ultimately, you need identify an instance with **rank equal to zero*.
 [Look into this guide](https://azure.github.io/azureml-web/docs/cheatsheet/distributed-training/) to understand how to detect the rank.
 
 For example, in Horovod MPI Tensorflow steps in would be `horovod.tensorflow.rank()`, so the debugging check may look like the following example:
@@ -324,12 +326,18 @@ if args.is_debug.lower() == 'true' and hvd.rank() == 0:
         debugpy.breakpoint()
 ```
 
+### Debugging distributed steps
+
+It is possible to debug steps with ParallelRunStep and MPIConfiguration across multiple nodes and many processes per node.
+
 > [!TIP]
-If you need to handle these situations differently, and full support steps distributed across multiple nodes and processes per node,
-you may need to add your own code for picking individual debugging ports for every instance of your training steps. Instead of passing port number as a parameter, steps can choose ports and "reserve" them by [adding an Azure ML Run property](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-manage-runs?tabs=python#tag-and-find-runs) - if a property with a certain name was already added, the port has been utilized and therefore cannot be used.
-Multiple processes per node require first starting process to initialize a `DebugRelay` object with a list of ports to connect to.
+If you need to handle such situations, and fully support steps distributed across multiple nodes and processes per node,
+you need to add your own code for picking individual debugging ports for every instance of your training steps. Instead of passing port number as a parameter, steps can choose ports and "reserve" them by [adding an Azure ML Run property](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-manage-runs?tabs=python#tag-and-find-runs) - if a property with a certain name was already added, the port has been utilized and therefore cannot be used.
+Multiple processes per node require first starting process to initialize a `DebugRelay` object with a list of ports to connect to - you can specify multiple ports in `DebugRelay` constructor.
 You may need to employ a shared data structure and a locking mechanism to make sure processes know when DebugRelay
 has been already initialized (checking for azrelay process also works).
+
+Using many ports remotely requires more complex debugging configurations in VS Code - one for each port.
 
 > [!IMPORTANT]
 > You still need to come up with a definitive number of ports because it configures how many debugging listeners start in Visual Studio Code. Every remote process you debug require its own port. Every port requires a configuration in `.vscode/launch.json`.
@@ -344,3 +352,4 @@ Learn more about troubleshooting:
 * [Local model deployment](how-to-troubleshoot-deployment-local.md)
 * [Remote model deployment](how-to-troubleshoot-deployment.md)
 * [Machine learning pipelines](how-to-debug-pipelines.md)
+* [Azure Debugging Relay repository](https://github.com/vladkol/azure-debug-relay)
