@@ -1,7 +1,7 @@
 ---
-title: Interactive distributed remote debugging with Visual Studio Code and Azure Debug Relay
+title: Interactive distributed remote debugging with Visual Studio Code and Azure Debugging Relay
 titleSuffix: Azure Machine Learning
-description: Interactively debug distributed remote Azure Machine Learning runs, pipelines, and deployments using Visual Studio Code and Azure Debug Relay
+description: Interactively debug distributed remote Azure Machine Learning runs, pipelines, and deployments using Visual Studio Code and Azure Debugging Relay
 services: machine-learning
 ms.service: machine-learning
 ms.subservice: core
@@ -11,11 +11,11 @@ ms.author: vladkol
 ms.date: 03/05/2021
 ---
 
-# Interactive distributed remote debugging with Visual Studio Code and Azure Debug Relay
+# Interactive distributed remote debugging with Visual Studio Code and Azure Debugging Relay
 
-Learn how to interactively debug distributed Azure Machine Learning experiments, pipelines, and deployments using Visual Studio Code (VS Code), [Azure Debug Relay](https://github.com/vladkol/azure-debug-relay), and [debugpy](https://github.com/microsoft/debugpy/).
+Learn how to interactively debug distributed Azure Machine Learning experiments, pipelines, and deployments using Visual Studio Code (VS Code), [Azure Debugging Relay](https://github.com/vladkol/azure-debug-relay), and [debugpy](https://github.com/microsoft/debugpy/).
 
-## Why remote debugging with Azure Debug Relay
+## Why remote debugging with Azure Debugging Relay
 
 When preparing your Machine Learning pipeline code for running in Azure Machine Learning, you may need to troubleshoot it in real environments:
 
@@ -25,7 +25,7 @@ When preparing your Machine Learning pipeline code for running in Azure Machine 
 
 In some environments, compute resources and data stores may only be accessible in a virtual network and/or with a managed identity.
 
-[Azure Debug Relay](https://github.com/vladkol/azure-debug-relay) creates secure private tunnels between compute nodes and your Visual Studio Code debug adapter for Python.
+[Azure Debugging Relay](https://github.com/vladkol/azure-debug-relay) creates secure private tunnels between compute nodes and your Visual Studio Code debug adapter for Python.
 It also takes care of identifying which node needs to be connected to for debugging your code.
 
 > [!TIP]
@@ -39,8 +39,8 @@ It also takes care of identifying which node needs to be connected to for debugg
 * [Python 3](https://www.python.org/downloads/)
 * [debugpy](https://pypi.org/project/debugpy/)
 * [An existing Azure Relay namespace](https://docs.microsoft.com/en-us/azure/azure-relay/relay-hybrid-connections-http-requests-dotnet-get-started#create-a-namespace) and a [Hybrid Connection](https://docs.microsoft.com/en-us/azure/azure-relay/relay-hybrid-connections-http-requests-dotnet-get-started#create-a-hybrid-connection)
-* [Azure Debug Relay (VS Code extension)](https://marketplace.visualstudio.com/items?itemName=VladKolesnikov-vladkol.azure-debug-relay)
-* [Azure Debug Relay (Python package)](https://pypi.org/project/azure-debug-relay/)
+* [Azure Debugging Relay (VS Code extension)](https://marketplace.visualstudio.com/items?itemName=VladKolesnikov-vladkol.azure-debug-relay)
+* [Azure Debugging Relay (Python package)](https://pypi.org/project/azure-debug-relay/)
 
 ## Create an Azure Relay Namespace and a Hybrid Connection
 
@@ -106,7 +106,7 @@ aml_workspace.get_default_keyvault().set_secret(
 ### Add debugging code to your steps and pipelines
 
 > [!NOTE]
-> You can find end-to-end example of a debug-ready Azure ML pipeline [here in Azure Debug Relay repository](https://github.com/vladkol/azure-debug-relay/tree/main/samples/azure_ml_advanced).
+> You can find end-to-end example of a debug-ready Azure ML pipeline [here in Azure Debugging Relay repository](https://github.com/vladkol/azure-debug-relay/tree/main/samples/azure_ml_advanced).
 
 #### Add the following packages to the environment conda dependencies of every step
 
@@ -148,9 +148,9 @@ single_step = PythonScriptStep(
     )
 ```
 
-#### Add the debugging code that handles `--is-debug` argument, initializes Azure Debug Relay, and starts debugging
+#### Add the debugging code that handles `--is-debug` argument, initializes Azure Debugging Relay, and starts debugging
 
-You can use [this example from Azure Debug Relay repo](https://github.com/vladkol/azure-debug-relay/blob/main/samples/azure_ml_advanced/steps/amldebugutils/debugutils.py) as a reference. Once added that, all you need is to call `start_remote_debugging_from_args`.
+You can use [this example from Azure Debugging Relay repo](https://github.com/vladkol/azure-debug-relay/blob/main/samples/azure_ml_advanced/steps/amldebugutils/debugutils.py) as a reference. Once added that, all you need is to call `start_remote_debugging_from_args`.
 
 Example:
 
@@ -337,7 +337,7 @@ And there must be a compound configuration that includes all of them.
 
 ## Next steps
 
-Now that you've set up VS Code with Azure Debug Relay, you can interactively debug code in any run or deployment in Azure Machine Learning.
+Now that you've set up VS Code with Azure Debugging Relay, you can interactively debug code in any run or deployment in Azure Machine Learning.
 
 Learn more about troubleshooting:
 
